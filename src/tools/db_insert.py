@@ -58,7 +58,7 @@ class WeaviateManager:
 if __name__ == '__main__':
     manager = WeaviateManager(config.get('Weaviate', 'classnm'))
 
-    with open('Data/xxx.txt', encoding='utf-8') as file:
+    with open('data/xxx.txt', encoding='utf-8') as file:
         content = file.read()
 
     new_cp = content.split('aicup')
