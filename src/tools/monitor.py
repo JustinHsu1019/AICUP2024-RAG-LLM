@@ -16,7 +16,7 @@ def check_service():
 
 def restart_service():
     print('Service is down. Restarting service...')
-    subprocess.run(['nohup', 'python3', 'Service/Service.py', '&'])
+    subprocess.run(['nohup', 'python3', 'src/flask_app.py', '&'])
 
 
 if __name__ == '__main__':
