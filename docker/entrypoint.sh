@@ -2,4 +2,4 @@
 
 # 啟動 Flask API
 cd /app
-exec python3 Service/Service.py
+exec python3 src/flask_app.py
