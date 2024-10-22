@@ -1,4 +1,4 @@
-# AI-CUP-RAG
+# aicup-rag
 
 ## Development Mode
 To set up the development environment, follow these steps:
