@@ -79,7 +79,7 @@ To set up the development environment, follow these steps:
 For more detailed information about each folder and its purpose, refer to the individual `README.md` files located in their respective directories.
 
 ## Contribution Guide (Optional)
-We follow a process similar to the GitHub Flow. The steps for contributing are as follows:
+We follow GitHub Flow for contributing. The steps are as follows:
 
 1. **Claim an issue**: Start by picking an issue from GitHub.
 2. **Create a branch**: Open a new branch with a clear name related to the issue (e.g., `feat/xxxxx-feature`).
