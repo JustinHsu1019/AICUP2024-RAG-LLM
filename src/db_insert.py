@@ -28,7 +28,7 @@ class WeaviateManager:
             'class': self.classnm,
             'properties': [
                 {'name': 'pid', 'dataType': ['text']},
-                {'name': 'content', 'dataType': ['text']},
+                {'name': 'content', 'dataType': ['text'], "tokenization": "gse"},
             ],
             'vectorizer': 'text2vec-openai',
             'moduleConfig': {
@@ -80,7 +80,7 @@ class WeaviateManager:
 
 
 if __name__ == '__main__':
-    with open('data/test.json', encoding='utf-8') as file:
+    with open('data/aicup_noocr_sec.json', encoding='utf-8') as file:
         data = json.load(file)
 
     failed_records = []  # 用於存放匯入失敗的資料
@@ -91,13 +91,13 @@ if __name__ == '__main__':
         content = item['content']
 
         if category == "faq":
-            classnm = "faq"
+            classnm = "faqdevprod"
             content_str = json.dumps(content, ensure_ascii=False, indent=4)
         elif category == "insurance":
-            classnm = "insurance"
+            classnm = "insurancedevprod"
             content_str = content
         elif category == "finance":
-            classnm = "finance"
+            classnm = "financedevprod"
             content_str = json.dumps(content, ensure_ascii=False, indent=4) if isinstance(content, dict) else content
         else:
             print("Unknown category, skipping item.")
