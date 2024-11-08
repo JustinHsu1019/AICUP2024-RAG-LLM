@@ -68,6 +68,7 @@ class ChatBot(Resource):
         source = request.json.get('source')
         question = request.json.get('query')
         category = request.json.get('category')
+        # alpha = request.json.get('alpha')
 
         # {
         # "qid": 1,
@@ -75,6 +76,8 @@ class ChatBot(Resource):
         # "query": "匯款銀行及中間行所收取之相關費用由誰負擔?",
         # "category": "insurance"
         # },
+        
+        alpha = 0.5
 
         if not question:
             response = jsonify({'qid': '1', 'retrieve': '1'})
@@ -82,7 +85,7 @@ class ChatBot(Resource):
             return response
         else:
             try:
-                response = search_do(question, category, source)
+                response = search_do(question, category, source, alpha)
                 response = {
                     'qid': qid,
                     'retrieve': int(response)
