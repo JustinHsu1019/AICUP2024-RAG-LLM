@@ -4,6 +4,7 @@ import weaviate
 from langchain.embeddings import OpenAIEmbeddings
 
 import utils.config_log as config_log
+# import config_log as config_log
 
 config, logger, CONFIG_PATH = config_log.setup_config_and_logging()
 config.read(CONFIG_PATH)
@@ -72,16 +73,16 @@ class WeaviateSemanticSearch:
         return results
 
 
-def search_do(question, category, source):
+def search_do(question, category, source, alpha):
     if category == "finance":
-        vdb_named = "Finance"
+        vdb_named = "Financedev"
     elif category == "insurance":
-        vdb_named = "Insurance"
+        vdb_named = "Insurancedev"
     else:
-        vdb_named = "Faq"
+        vdb_named = "Faqdev"
 
     searcher = WeaviateSemanticSearch(vdb_named)
-    results = searcher.hybrid_search(question, source, 1, alpha=0.5)
+    results = searcher.hybrid_search(question, source, 1, alpha=alpha)
 
     result_li = []
     for _, result in enumerate(results, 1):
@@ -92,7 +93,7 @@ def search_do(question, category, source):
 
 
 if __name__ == '__main__':
-    vdb = "Faq"
+    vdb = "Insurancedev"
     client = WeaviateSemanticSearch(vdb)
 
     # 統計筆數
