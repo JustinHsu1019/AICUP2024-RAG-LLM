@@ -13,3 +13,4 @@ flask_restx==1.3.0
 python-dateutil
 redis==5.0.8
 flask-httpauth==4.8.0
+ckip-transformers
