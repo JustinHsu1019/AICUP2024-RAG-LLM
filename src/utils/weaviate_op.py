@@ -3,13 +3,13 @@ import os
 import weaviate
 from langchain.embeddings import OpenAIEmbeddings
 
-import utils.config_log as config_log
+import config_log as config_log
 
 config, logger, CONFIG_PATH = config_log.setup_config_and_logging()
 config.read(CONFIG_PATH)
 
 wea_url = config.get('Weaviate', 'weaviate_url')
-PROPERTIES = ['uuid', 'title', 'content']
+PROPERTIES = ['pid', 'content']
 
 os.environ['OPENAI_API_KEY'] = config.get('OpenAI', 'api_key')
 
@@ -25,7 +25,7 @@ class WeaviateSemanticSearch:
     def aggregate_count(self):
         return self.client.query.aggregate(self.classnm).with_meta_count().do()
 
-    def get_all_data(self, limit=3):
+    def get_all_data(self, limit=100000):
         if self.client.schema.exists(self.classnm):
             result = self.client.query.get(class_name=self.classnm, properties=PROPERTIES).with_limit(limit).do()
             return result
@@ -43,6 +43,7 @@ class WeaviateSemanticSearch:
         {{
             Get {{
                 {self.classnm}(hybrid: {{query: "{query}", vector: [{vector_str}], alpha: {alpha} }}, limit: {num}) {{
+                    uuid
                     title
                     content
                     _additional {{
@@ -66,17 +67,17 @@ def search_do(input_, alp):
     vdb_named = config.get('Weaviate', 'classnm')
 
     searcher = WeaviateSemanticSearch(vdb_named)
-    results = searcher.hybrid_search(input_, 10, alpha=alp)
+    results = searcher.hybrid_search(input_, 1, alpha=alp)
 
     result_li = []
     for _, result in enumerate(results, 1):
-        result_li.append({'title': result['title'], 'content': result['content']})
+        result_li.append({'retrieve': result['uuid'], 'title': result['title'], 'content': result['content']})
 
     return result_li
 
 
 if __name__ == '__main__':
-    vdb = config.get('Weaviate', 'classnm')
+    vdb = "Insurance"
     client = WeaviateSemanticSearch(vdb)
 
     # 統計筆數
@@ -84,7 +85,7 @@ if __name__ == '__main__':
     print(count_result)
 
     # 輸出所有資料
-    data_result = client.get_all_data()
+    data_result = client.get_all_data(int(client.aggregate_count()['data']['Aggregate'][vdb][0]['meta']['count']))
     print(data_result)
 
     # 刪除此向量庫

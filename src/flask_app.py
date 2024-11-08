@@ -5,8 +5,7 @@ from flask_httpauth import HTTPBasicAuth
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_restx import Api, Resource, fields
-from utils.ai.call_ai import call_aied
-from utils.weaviate_op import search_do
+from utils.weaviate_hyb import for_aicup
 from werkzeug.security import check_password_hash, generate_password_hash
 
 config, logger, CONFIG_PATH = config_log.setup_config_and_logging()
@@ -41,7 +40,12 @@ ns = api.namespace('api', description='Chatbot operations')
 
 model = api.model(
     'ChatRequest',
-    {'message': fields.String(required=True, description='The message to the chatbot')},
+    {
+        'qid': fields.String(required=True, description='qid of the question'),
+        'source': fields.List(fields.String, required=True, description='source of the question'),
+        'query': fields.String(required=True, description='The message to the chatbot'),
+        'category': fields.String(required=True, description='The category of the question')
+    },
 )
 
 
@@ -60,11 +64,17 @@ class ChatBot(Resource):
     @api.doc('chat_bot')
     @api.expect(model)
     def post(self):
-        question = request.json.get('message')
+        qid = request.json.get('qid')
+        source = request.json.get('source')
+        question = request.json.get('query')
+        category = request.json.get('category')
 
-        alpha = 0.5
-
-        use_gpt = True
+        # {
+        # "qid": 1,
+        # "source": [442, 115, 440, 196, 431, 392, 14, 51],
+        # "query": "匯款銀行及中間行所收取之相關費用由誰負擔?",
+        # "category": "insurance"
+        # },
 
         if not question:
             response = jsonify({'llm': '無問題', 'retriv': '無檢索'})
@@ -72,13 +82,15 @@ class ChatBot(Resource):
             return response
         else:
             try:
-                response_li = search_do(question, alp=alpha)
-                response = call_aied(response_li, question, use_gpt)
+                response = for_aicup(question, category, source)
+                response = response[0]
+                if isinstance(response, dict):
+                    response.pop('title', None)
+                    response.pop('content', None)
 
-                if not isinstance(response, str):
-                    response = str(response)
-                if not isinstance(response_li, str):
-                    response_li = str(response_li)
+                response['qid'] = qid
+
+                response = jsonify(response)
 
             except Exception:
                 response = jsonify({'message': 'Internal Server Error'})
@@ -86,7 +98,6 @@ class ChatBot(Resource):
                 return response
 
         try:
-            response = jsonify({'llm': response, 'retriv': response_li})
             response.status_code = 200
             return response
         except TypeError:
