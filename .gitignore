@@ -1,5 +1,6 @@
 # secret ini
 config.ini
+reference/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -3,7 +3,7 @@ import os
 import weaviate
 from langchain.embeddings import OpenAIEmbeddings
 
-import config_log as config_log
+import utils.config_log as config_log
 
 config, logger, CONFIG_PATH = config_log.setup_config_and_logging()
 config.read(CONFIG_PATH)
@@ -14,7 +14,6 @@ PROPERTIES = ['pid', 'content']
 os.environ['OPENAI_API_KEY'] = config.get('OpenAI', 'api_key')
 
 
-# TODO: 添加 Reranker
 class WeaviateSemanticSearch:
     def __init__(self, classnm):
         self.url = wea_url
@@ -25,7 +24,7 @@ class WeaviateSemanticSearch:
     def aggregate_count(self):
         return self.client.query.aggregate(self.classnm).with_meta_count().do()
 
-    def get_all_data(self, limit=100000):
+    def get_all_data(self, limit=3):
         if self.client.schema.exists(self.classnm):
             result = self.client.query.get(class_name=self.classnm, properties=PROPERTIES).with_limit(limit).do()
             return result
@@ -35,16 +34,26 @@ class WeaviateSemanticSearch:
     def delete_class(self):
         self.client.schema.delete_class(self.classnm)
 
-    # TODO: 完善 CKIP keyword Search (目前 score 皆為 0)
-    def hybrid_search(self, query, num, alpha):
+    def hybrid_search(self, query, source, num, alpha):
         query_vector = self.embeddings.embed_query(query)
         vector_str = ','.join(map(str, query_vector))
+
+        where_conditions = ' '.join([
+            f'{{path: ["pid"], operator: Equal, valueText: "{pid}"}}' for pid in source
+        ])
+
         gql_query = f"""
         {{
             Get {{
-                {self.classnm}(hybrid: {{query: "{query}", vector: [{vector_str}], alpha: {alpha} }}, limit: {num}) {{
-                    uuid
-                    title
+                {self.classnm}(where: {{
+                    operator: Or,
+                    operands: [{where_conditions}]
+                }}, hybrid: {{
+                    query: "{query}",
+                    vector: [{vector_str}],
+                    alpha: {alpha}
+                }}, limit: {num}) {{
+                    pid
                     content
                     _additional {{
                         distance
@@ -63,21 +72,27 @@ class WeaviateSemanticSearch:
         return results
 
 
-def search_do(input_, alp):
-    vdb_named = config.get('Weaviate', 'classnm')
+def search_do(question, category, source):
+    if category == "finance":
+        vdb_named = "Finance"
+    elif category == "insurance":
+        vdb_named = "Insurance"
+    else:
+        vdb_named = "Faq"
 
     searcher = WeaviateSemanticSearch(vdb_named)
-    results = searcher.hybrid_search(input_, 1, alpha=alp)
+    results = searcher.hybrid_search(question, source, 1, alpha=0.5)
 
     result_li = []
     for _, result in enumerate(results, 1):
-        result_li.append({'retrieve': result['uuid'], 'title': result['title'], 'content': result['content']})
+        result_li.append({'pid': result['pid'], 'content': result['content']})
 
-    return result_li
+    print(result_li[0]['pid'])
+    return result_li[0]['pid']
 
 
 if __name__ == '__main__':
-    vdb = "Insurance"
+    vdb = "Faq"
     client = WeaviateSemanticSearch(vdb)
 
     # 統計筆數
@@ -85,8 +100,8 @@ if __name__ == '__main__':
     print(count_result)
 
     # 輸出所有資料
-    data_result = client.get_all_data(int(client.aggregate_count()['data']['Aggregate'][vdb][0]['meta']['count']))
-    print(data_result)
+    # data_result = client.get_all_data(int(client.aggregate_count()['data']['Aggregate'][vdb][0]['meta']['count']))
+    # print(data_result)
 
     # 刪除此向量庫
     # client.delete_class()

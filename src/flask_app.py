@@ -5,7 +5,7 @@ from flask_httpauth import HTTPBasicAuth
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_restx import Api, Resource, fields
-from utils.weaviate_hyb import for_aicup
+from utils.weaviate_op import search_do
 from werkzeug.security import check_password_hash, generate_password_hash
 
 config, logger, CONFIG_PATH = config_log.setup_config_and_logging()
@@ -41,8 +41,8 @@ ns = api.namespace('api', description='Chatbot operations')
 model = api.model(
     'ChatRequest',
     {
-        'qid': fields.String(required=True, description='qid of the question'),
-        'source': fields.List(fields.String, required=True, description='source of the question'),
+        'qid': fields.Integer(required=True, description='qid of the question'),
+        'source': fields.List(fields.Integer, required=True, description='source of the question'),
         'query': fields.String(required=True, description='The message to the chatbot'),
         'category': fields.String(required=True, description='The category of the question')
     },
@@ -77,32 +77,30 @@ class ChatBot(Resource):
         # },
 
         if not question:
-            response = jsonify({'llm': '無問題', 'retriv': '無檢索'})
+            response = jsonify({'qid': '1', 'retrieve': '1'})
             response.status_code = 200
             return response
         else:
             try:
-                response = for_aicup(question, category, source)
-                response = response[0]
-                if isinstance(response, dict):
-                    response.pop('title', None)
-                    response.pop('content', None)
-
-                response['qid'] = qid
+                response = search_do(question, category, source)
+                response = {
+                    'qid': qid,
+                    'retrieve': int(response)
+                }
 
                 response = jsonify(response)
 
             except Exception:
-                response = jsonify({'message': 'Internal Server Error'})
-                response.status_code = 500
+                response = jsonify({'qid': qid, 'retrieve': source[-1]})
+                response.status_code = 200
                 return response
 
         try:
             response.status_code = 200
             return response
         except TypeError:
-            response = jsonify({'message': 'Internal Server Error'})
-            response.status_code = 500
+            response = jsonify({'qid': qid, 'retrieve': source[-1]})
+            response.status_code = 200
             return response
 
 
