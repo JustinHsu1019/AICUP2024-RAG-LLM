@@ -5,7 +5,8 @@ from flask_httpauth import HTTPBasicAuth
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_restx import Api, Resource, fields
-from utils.weaviate_op import search_do
+# from utils.weaviate_op import search_do
+from utils.weaviatexreranker import search_do
 from werkzeug.security import check_password_hash, generate_password_hash
 
 config, logger, CONFIG_PATH = config_log.setup_config_and_logging()
