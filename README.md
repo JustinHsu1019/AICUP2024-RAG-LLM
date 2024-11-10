@@ -1,5 +1,9 @@
-# (AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用)[https://tbrain.trendmicro.com.tw/Competitions/Details/37]
+# AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用
 ＊＊ High-Accuracy RAG Retriever Template ＊＊
+
+## Offical Website
+
+[https://tbrain.trendmicro.com.tw/Competitions/Details/37](https://tbrain.trendmicro.com.tw/Competitions/Details/37)
 
 ## Rankings
 
