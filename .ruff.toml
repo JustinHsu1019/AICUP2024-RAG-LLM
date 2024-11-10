@@ -1,0 +1,18 @@
+line-length = 120
+
+
+[lint]
+select = [
+    "E",  # pycodestyle error
+    "W",  # pycodestyle warning
+    "F",  # Pyflakes
+    "B",  # bugbear
+    "UP",  # pyupgrade
+    "N", # pep8-naming
+    "I001", # isort
+    "Q000", # flake8-quotes
+]
+ignore-init-module-imports = true
+
+[lint.flake8-quotes]
+inline-quotes = "single"
