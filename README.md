@@ -86,7 +86,7 @@ To set up the development environment, follow these steps:
 ## Folder-specific Details
 For more detailed information about each folder and its purpose, refer to the individual `README.md` files located in their respective directories.
 
-## Contribution Guide (Optional)
+## Contribution Guide
 We follow GitHub Flow for contributing. The steps are as follows:
 
 1. **Claim an issue**: Start by picking an issue from GitHub.
@@ -105,7 +105,7 @@ We follow GitHub Flow for contributing. The steps are as follows:
    - Ensure all CI checks pass.
 6. **Merge**: Once approved and CI passes, merge the branch into `main` yourself.
 
-## Additional Notes (Optional)
+## Additional Notes
 - Keep your commits focused and ensure meaningful commit messages.
 - Always rebase your branch on top of `main` before merging.
 - Avoid large, multi-purpose PRs. Smaller changes are easier to review and help prevent issues.
