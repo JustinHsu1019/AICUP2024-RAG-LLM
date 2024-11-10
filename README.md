@@ -3,8 +3,8 @@
 
 ## Rankings
 
-- Total: 38 / 487 Teams
-   - Leaderboard: 38 / 222
+- Overall Ranking: 38th out of 487 teams (~7.8%)
+   - Leaderboard: 38th out of 222
 
 ![AI Cup Result](img/aicup_result.png)
 
