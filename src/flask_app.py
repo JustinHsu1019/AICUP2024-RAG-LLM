@@ -6,8 +6,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_restx import Api, Resource, fields
 
-# from utils.weaviate_op import search_do
-from utils.weaviatexreranker import search_do
+from utils.retrieval_agent import search_do
 from werkzeug.security import check_password_hash, generate_password_hash
 
 config, logger, CONFIG_PATH = config_log.setup_config_and_logging()
@@ -61,6 +60,7 @@ class HealthCheck(Resource):
         return response
 
 
+# TODO: Modify the output format for general RAG purposes
 @ns.route('/chat')
 class ChatBot(Resource):
     @api.doc('chat_bot')
@@ -70,8 +70,11 @@ class ChatBot(Resource):
         source = request.json.get('source')
         question = request.json.get('query')
         category = request.json.get('category')
+
+        # for alpha testing
         # alpha = request.json.get('alpha')
 
+        # input template
         # {
         # "qid": 1,
         # "source": [442, 115, 440, 196, 431, 392, 14, 51],
