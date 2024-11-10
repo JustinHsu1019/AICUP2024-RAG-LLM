@@ -5,6 +5,7 @@ from flask_httpauth import HTTPBasicAuth
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_restx import Api, Resource, fields
+
 # from utils.weaviate_op import search_do
 from utils.weaviatexreranker import search_do
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -45,7 +46,7 @@ model = api.model(
         'qid': fields.Integer(required=True, description='qid of the question'),
         'source': fields.List(fields.Integer, required=True, description='source of the question'),
         'query': fields.String(required=True, description='The message to the chatbot'),
-        'category': fields.String(required=True, description='The category of the question')
+        'category': fields.String(required=True, description='The category of the question'),
     },
 )
 
@@ -77,7 +78,7 @@ class ChatBot(Resource):
         # "query": "匯款銀行及中間行所收取之相關費用由誰負擔?",
         # "category": "insurance"
         # },
-        
+
         alpha = 0.5
 
         if not question:
@@ -87,10 +88,7 @@ class ChatBot(Resource):
         else:
             try:
                 response = search_do(question, category, source, alpha)
-                response = {
-                    'qid': qid,
-                    'retrieve': int(response)
-                }
+                response = {'qid': qid, 'retrieve': int(response)}
 
                 response = jsonify(response)
 

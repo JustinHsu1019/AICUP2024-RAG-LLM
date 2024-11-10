@@ -1,8 +1,9 @@
-import time
 import json
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+import time
+
 import utils.config_log as config_log
 import weaviate
+from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 config, logger, CONFIG_PATH = config_log.setup_config_and_logging()
 config.read(CONFIG_PATH)
@@ -12,6 +13,7 @@ openai_api_key = config.get('OpenAI', 'api_key')
 
 # Token limit for OpenAI model
 TOKEN_LIMIT = 8192
+
 
 class WeaviateManager:
     def __init__(self, classnm):
@@ -28,7 +30,11 @@ class WeaviateManager:
             'class': self.classnm,
             'properties': [
                 {'name': 'pid', 'dataType': ['text']},
-                {'name': 'content', 'dataType': ['text'], "tokenization": "gse"}, # `gse` implements the "Jieba" algorithm, which is a popular Chinese text segmentation algorithm.
+                {
+                    'name': 'content',
+                    'dataType': ['text'],
+                    'tokenization': 'gse',
+                },  # `gse` implements the "Jieba" algorithm, which is a popular Chinese text segmentation algorithm.
             ],
             'vectorizer': 'text2vec-openai',
             'moduleConfig': {
@@ -51,19 +57,19 @@ class WeaviateManager:
                 error_msg = str(e)
                 # 檢查是否是因為 token 長度過長
                 if 'maximum context length' in error_msg:
-                    print(f"Content too long for pid: {pid}. Splitting content.")
-                    return "TOO_LONG"  # 特殊回傳值表達需要分割
+                    print(f'Content too long for pid: {pid}. Splitting content.')
+                    return 'TOO_LONG'  # 特殊回傳值表達需要分割
                 elif '429' in error_msg:
                     print(f'Rate limit exceeded, retrying in 5 seconds... (Attempt {attempt + 1}/{max_retries})')
                     time.sleep(5)
                 else:
-                    print(f"Unexpected Error for pid: {pid} - {error_msg}")
+                    print(f'Unexpected Error for pid: {pid} - {error_msg}')
                     return False
             except Exception as e:
                 print(f'Error inserting data for pid: {pid}, category: {self.classnm} - {str(e)}')
                 return False
         # 超過最大重試次數
-        print(f"Failed to insert data for pid: {pid} after {max_retries} attempts.")
+        print(f'Failed to insert data for pid: {pid} after {max_retries} attempts.')
         return False
 
     def split_and_insert(self, pid, content, category):
@@ -73,10 +79,10 @@ class WeaviateManager:
 
         # 逐段插入分割後的文本，保持相同的 pid 和 category
         for idx, part in enumerate(split_content):
-            print(f"Inserting split content part {idx + 1} for pid: {pid}")
+            print(f'Inserting split content part {idx + 1} for pid: {pid}')
             success = self.insert_data(pid, part)
             if not success:
-                failed_records.append({"pid": pid, "category": category})
+                failed_records.append({'pid': pid, 'category': category})
 
 
 if __name__ == '__main__':
@@ -90,27 +96,27 @@ if __name__ == '__main__':
         pid = item['pid']
         content = item['content']
 
-        if category == "faq":
-            classnm = "faqdev"
+        if category == 'faq':
+            classnm = 'faqdev'
             content_str = json.dumps(content, ensure_ascii=False, indent=4)
-        elif category == "insurance":
-            classnm = "insurancedev"
+        elif category == 'insurance':
+            classnm = 'insurancedev'
             content_str = content
-        elif category == "finance":
-            classnm = "financedev"
+        elif category == 'finance':
+            classnm = 'financedev'
             content_str = json.dumps(content, ensure_ascii=False, indent=4) if isinstance(content, dict) else content
         else:
-            print("Unknown category, skipping item.")
+            print('Unknown category, skipping item.')
             continue
 
         manager = WeaviateManager(classnm)
         result = manager.insert_data(pid, content_str)
 
         # 如果內容過長需要切割
-        if result == "TOO_LONG":
+        if result == 'TOO_LONG':
             manager.split_and_insert(pid, content_str, category)
         elif not result:  # 如果失敗且非長度問題
-            failed_records.append({"pid": pid, "category": category})
+            failed_records.append({'pid': pid, 'category': category})
 
     # 將失敗的資料寫入 JSON 檔案
     if failed_records:
@@ -118,4 +124,4 @@ if __name__ == '__main__':
             json.dump(failed_records, f, ensure_ascii=False, indent=4)
         print("Failed records have been written to 'failed_imports.json'")
     else:
-        print("All records imported successfully.")
+        print('All records imported successfully.')
