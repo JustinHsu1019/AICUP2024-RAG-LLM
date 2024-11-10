@@ -65,7 +65,7 @@ def rerank_with_voyage(query, documents, pids, api_key):
     vo = voyageai.Client(api_key=api_key)
     reranking = vo.rerank(query, documents, model="rerank-2", top_k=1)
     top_result = reranking.results[0]
-    
+
     # 根據內容找到相對應的 pid
     top_pid = pids[documents.index(top_result.document)]
     return {'pid': top_pid, 'relevance_score': top_result.relevance_score}

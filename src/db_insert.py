@@ -28,7 +28,7 @@ class WeaviateManager:
             'class': self.classnm,
             'properties': [
                 {'name': 'pid', 'dataType': ['text']},
-                {'name': 'content', 'dataType': ['text'], "tokenization": "gse"},
+                {'name': 'content', 'dataType': ['text'], "tokenization": "gse"}, # `gse` implements the "Jieba" algorithm, which is a popular Chinese text segmentation algorithm.
             ],
             'vectorizer': 'text2vec-openai',
             'moduleConfig': {
@@ -68,7 +68,7 @@ class WeaviateManager:
 
     def split_and_insert(self, pid, content, category):
         # 使用 TextSplitter 分割長文本
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=4096, chunk_overlap=500)
         split_content = text_splitter.split_text(content)
 
         # 逐段插入分割後的文本，保持相同的 pid 和 category
@@ -91,13 +91,13 @@ if __name__ == '__main__':
         content = item['content']
 
         if category == "faq":
-            classnm = "faqdevprod"
+            classnm = "faqdev"
             content_str = json.dumps(content, ensure_ascii=False, indent=4)
         elif category == "insurance":
-            classnm = "insurancedevprod"
+            classnm = "insurancedev"
             content_str = content
         elif category == "finance":
-            classnm = "financedevprod"
+            classnm = "financedev"
             content_str = json.dumps(content, ensure_ascii=False, indent=4) if isinstance(content, dict) else content
         else:
             print("Unknown category, skipping item.")
