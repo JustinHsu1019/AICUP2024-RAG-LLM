@@ -16,13 +16,17 @@ TOKEN_LIMIT = 8192
 
 
 class WeaviateManager:
+    """Weaviate Insert data 管理器"""
+
     def __init__(self, classnm):
+        """初始化 Weaviate 連接"""
         self.url = wea_url
         self.client = weaviate.Client(url=wea_url, additional_headers={'X-OpenAI-Api-Key': openai_api_key})
         self.classnm = classnm
         self.check_class_exist()
 
     def check_class_exist(self):
+        """檢查 class 是否存在"""
         if self.client.schema.exists(self.classnm):
             print(f'{self.classnm} is ready')
             return True
@@ -47,6 +51,7 @@ class WeaviateManager:
         return True
 
     def insert_data(self, pid, content):
+        """插入資料到 Weaviate"""
         data_object = {'pid': pid, 'content': content}
         max_retries = 5
         for attempt in range(max_retries):
@@ -73,6 +78,7 @@ class WeaviateManager:
         return False
 
     def split_and_insert(self, pid, content, category):
+        """處理特例：分割並插入資料"""
         # 使用 TextSplitter 分割長文本
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=4096, chunk_overlap=500)
         split_content = text_splitter.split_text(content)

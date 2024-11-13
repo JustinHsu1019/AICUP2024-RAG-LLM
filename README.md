@@ -1,6 +1,11 @@
 # AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用
 
-## Development Mode
+## Repo Structure
+```
+(主要用 # 介紹沒有在 folder 內獨立檔案)
+```
+
+## Setup Environment
 To set up the development environment, follow these steps:
 
 1. Create a virtual environment:
@@ -20,84 +25,36 @@ To set up the development environment, follow these steps:
    ```
 
 4. Manually add your `secret key` to the `config.ini`.
+   (需展開解釋 config.ini 內的每一項 key)
 
 5. Create a `logs` directory:
    ```
    mkdir logs
    ```
 
-6. Navigate to the `docker` directory (optional):
+6. Navigate to the `docker` directory:
    ```
    cd docker
    ```
 
-7. Start the Docker environment (optional):
+7. Start the Docker environment (weaviate database):
    ```
    docker-compose up -d
    ```
 
-8. Run the Flask app:
+8. Data preprocessing:
+
+9. Data insert to weaviate:
+
+10. Run the Flask app:
    ```
    python3 src/flask_app.py
    ```
 
-## Docker Production Mode
+11. 將主辦方提供的 questions.json 測試資料塞入 data/:
 
-1. Copy the configuration example and create your own config file:
-   ```
-   cp config_example.ini config.ini
-   ```
+12. 運行 main.py 進行測試得出 data/pred_retrieve.json 提交最終結果給主辦方:
 
-2. Manually add your `secret key` to the `config.ini`.
-
-3. Create a `logs` directory:
-   ```
-   mkdir logs
-   ```
-
-4. Navigate to the `docker` directory:
-   ```
-   cd docker
-   ```
-
-5. Start the Docker environment:
-   ```
-   docker-compose up -d
-   ```
-
-6. Build the Docker image:
-   ```
-   docker build -t aicup_img -f dockerfile .
-   ```
-
-7. Run the Docker container:
-   ```
-   docker run -d -p 5001:5001 --name aicup_cont aicup_img
-   ```
 
 ## Folder-specific Details
 For more detailed information about each folder and its purpose, refer to the individual `README.md` files located in their respective directories.
-
-## Contribution Guide
-We follow GitHub Flow for contributing. The steps are as follows:
-
-1. **Claim an issue**: Start by picking an issue from GitHub.
-2. **Create a branch**: Open a new branch with a clear name related to the issue (e.g., `feat/xxxxx-feature`).
-3. **Development**: After completing the feature, ensure you run pre-commit hooks:
-   ```
-   pre-commit run --all-files
-   ```
-4. **Create PR Request (PR)**:
-   - Ensure your PR is small and easily reviewable.
-   - Add the GitHub issue number to the PR title in the format `feat(#123): xxxxxx` for easy reference.
-   - Write a clear description including the reason for the change and what was modified (`Reason & Changes`).
-5. **Review & Approval**:
-   - Assign the PR to all members of the team for review.
-   - Wait for at least one approval.
-   - Ensure all CI checks pass.
-6. **Merge**: Once approved and CI passes, merge the branch into `main` yourself.
-
-## Additional Notes
-- Keep your commits focused and ensure meaningful commit messages.
-- Always rebase your branch on top of `main` before merging.
-- Avoid large, multi-purpose PRs. Smaller changes are easier to review and help prevent issues.
