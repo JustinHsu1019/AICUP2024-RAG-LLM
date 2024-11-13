@@ -124,7 +124,7 @@ if __name__ == '__main__':
         elif not result:  # 如果失敗且非長度問題
             failed_records.append({'pid': pid, 'category': category})
 
-    # 將失敗的資料寫入 JSON 檔案
+    # 將失敗的資料寫入 JSON 檔案，之後有需要可以利用此 JSON 檔案重新匯入
     if failed_records:
         with open('failed_imports.json', 'w', encoding='utf-8') as f:
             json.dump(failed_records, f, ensure_ascii=False, indent=4)

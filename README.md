@@ -64,7 +64,11 @@ To set up the development environment, follow these steps:
    ```
 
 4. Manually add your `secret key` to the `config.ini`.
-   (需展開解釋 config.ini 內的每一項 key)
+   ```
+   [OpenAI] 的 api_key 可以在 openai 官網註冊取得
+   [VoyageAI] 的 api_key 可以在 voyageai 官網註冊取得
+   [Api_docs] 的 password 可以自己隨意輸入 (flask_app.py 啟動後，直接訪問 http://127.0.0.1:5000/ 即可看到 swagger api_docs 頁面)
+   ```
 
 5. Create a `logs` directory:
    ```
@@ -82,18 +86,26 @@ To set up the development environment, follow these steps:
    ```
 
 8. Data preprocessing:
+   ```
+   (TODO: 等 data 那邊處理好)
+   ```
 
 9. Data insert to weaviate:
-
-10. Run the Flask app:
    ```
-   python3 src/flask_app.py
+   python3 Preprocess/insert_data.py
    ```
 
-11. 將主辦方提供的 questions.json 測試資料塞入 data/:
+10. Run the Flask app (/ 是 API Docs, /api/chat/ 是我們的 Retrieval API):
+   ```
+   python3 Model/flask_app.py
+   ```
+
+11. 將主辦方提供的題目 json 檔案改名為 questions.json 並塞入 data/
 
 12. 運行 main.py 進行測試得出 data/pred_retrieve.json 提交最終結果給主辦方:
-
+   ```
+   python3 main.py
+   ```
 
 ## Folder-specific Details
 For more detailed information about each folder and its purpose, refer to the individual `README.md` files located in their respective directories.

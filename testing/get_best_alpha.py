@@ -4,7 +4,7 @@ from collections import defaultdict
 import requests
 
 # Load questions from the JSON file
-with open('data/questions_example.json', encoding='utf-8') as file:
+with open('data/questions.json', encoding='utf-8') as file:
     questions = json.load(file)['questions']
 
 # Load ground truth data

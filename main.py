@@ -4,7 +4,7 @@ import time
 import requests
 
 # 讀取主辦提供的 Question JSON 檔案
-with open('data/questions_example.json', encoding='utf-8') as file:
+with open('data/questions.json', encoding='utf-8') as file:
     questions = json.load(file)['questions']
 
 # 初始化輸出資料格式
