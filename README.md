@@ -1,12 +1,4 @@
 # AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用
-＊＊ High-Accuracy RAG Retriever Template ＊＊
-
-## Rankings
-
-- Overall Ranking: 38th out of 487 teams (~7.8%)
-   - Leaderboard: 38th out of 222
-
-![AI Cup Result](img/aicup_result.png)
 
 ## Development Mode
 To set up the development environment, follow these steps:
