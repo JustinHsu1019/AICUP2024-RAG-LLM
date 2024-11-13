@@ -2,7 +2,46 @@
 
 ## Repo Structure
 ```
-(主要用 # 介紹沒有在 folder 內獨立檔案)
+.
+├── .github
+│   ├── contribute_guide.md
+│   └── workflows
+│       └── ci.yml
+├── .gitignore # 讓 git 忽略的檔案和目錄 (e.g. cache, logs, etc.)
+├── .pre-commit-config.yaml # 設定 pre-commit hooks 以檢查與格式化代碼、環境配置、Git 設定及檢測敏感資訊
+├── .ruff.toml # ruff 設定檔，lint: pep8-naming, pycodestyle, pyflakes, etc.
+├── LICENSE # MIT License
+├── Model
+│   ├── README.md
+│   ├── flask_app.py
+│   └── utils
+│       ├── README.md
+│       ├── __init__.py
+│       ├── config_log.py
+│       └── retrieval_agent.py
+├── Preprocess
+│   ├── README.md
+│   ├── data_process
+│   │   ├── README.md
+│   │   ├── conbine_readpdf_result.py
+│   │   ├── merge_with_ocr_pdfminer.py
+│   │   ├── read_pdf_noocr.py
+│   │   └── read_pdf_ocr.py
+│   └── insert_data.py
+├── README.md
+├── config_example.ini # 設定檔範例，需自己複製一份成 config.ini 並修改
+├── data
+│   └── README.md
+├── docker
+│   ├── README.md
+│   ├── docker-compose.yml
+│   └── docker_install.sh
+├── main.py # 主程式
+├── requirements.txt # Python pip 環境需求
+└── testing
+    ├── README.md
+    ├── checkans.py
+    └── get_best_alpha.py
 ```
 
 ## Setup Environment
