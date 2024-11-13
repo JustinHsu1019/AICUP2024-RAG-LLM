@@ -45,7 +45,7 @@
 ```
 
 ## Setup Environment
-- OS: MacOS, Linux 為主, Windows 需安裝 WSL2 等來模擬出 Linux 環境
+- **OS:** MacOS, Linux 為主, Windows 需安裝 WSL2 等來模擬出 Linux 環境
 
 To set up the development environment, follow these steps:
 
