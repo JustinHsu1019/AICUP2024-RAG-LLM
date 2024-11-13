@@ -69,7 +69,8 @@ To set up the development environment, follow these steps:
 
 - [OpenAI] 的 api_key 可以在 openai 官網註冊取得
 - [VoyageAI] 的 api_key 可以在 voyageai 官網註冊取得
-- [Api_docs] 的 password 可以自己隨意輸入 (flask_app.py 啟動後，直接訪問 http://127.0.0.1:5000/ 即可看到 swagger api_docs 頁面)
+- [Api_docs] 的 password 可以自己隨意輸入
+    - flask_app.py 啟動後，直接訪問 http://127.0.0.1:5000/ 即可看到 swagger api_docs 頁面
 
 6. Create a `logs` directory:
    ```
