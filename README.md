@@ -65,40 +65,38 @@ To set up the development environment, follow these steps:
    cp config_example.ini config.ini
    ```
 
-4. Manually add your `secret key` to the `config.ini`.
-   ```
-   [OpenAI] 的 api_key 可以在 openai 官網註冊取得
-   [VoyageAI] 的 api_key 可以在 voyageai 官網註冊取得
-   [Api_docs] 的 password 可以自己隨意輸入 (flask_app.py 啟動後，
-   直接訪問 http://127.0.0.1:5000/ 即可看到 swagger api_docs 頁面)
-   ```
+4. Manually add your `secret key` to the `config.ini`:
 
-5. Create a `logs` directory:
+- [OpenAI] 的 api_key 可以在 openai 官網註冊取得
+- [VoyageAI] 的 api_key 可以在 voyageai 官網註冊取得
+- [Api_docs] 的 password 可以自己隨意輸入 (flask_app.py 啟動後，直接訪問 http://127.0.0.1:5000/ 即可看到 swagger api_docs 頁面)
+
+6. Create a `logs` directory:
    ```
    mkdir logs
    ```
 
-6. Navigate to the `docker` directory:
+7. Navigate to the `docker` directory:
    ```
    cd docker
    ```
 
-7. Start the Docker environment (weaviate database):
+8. Start the Docker environment (weaviate database):
    ```
    docker-compose up -d
    ```
 
-8. Data preprocessing:
+9. Data preprocessing:
    ```
    (TODO: 等 data 那邊處理好)
    ```
 
-9. Data insert to weaviate:
+10. Data insert to weaviate:
    ```
    python3 Preprocess/insert_data.py
    ```
 
-10. Run the Flask app (/ 是 API Docs, /api/chat/ 是我們的 Retrieval API):
+11. Run the Flask app (/ 是 API Docs, /api/chat/ 是我們的 Retrieval API):
    ```
    python3 Model/flask_app.py
    ```
