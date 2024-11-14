@@ -4,7 +4,7 @@ import json
 with open('data/aicup_noocr.json', encoding='utf-8') as file:
     noocr_data = json.load(file)
 
-with open('data/aicup_ref.json', encoding='utf-8') as file:
+with open('data/formatted_reference_ocr.json', encoding='utf-8') as file:
     ref_data = json.load(file)
 
 # 建立 ref_data 的 dictionary，並檢查 content 是否為字串，再去除空格
