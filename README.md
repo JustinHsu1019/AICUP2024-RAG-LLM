@@ -107,7 +107,7 @@ To set up the development environment, follow these steps:
     ```python
     # Configure Tesseract path if necessary (update this path as needed)
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-    
+
     # Specify the path to the Poppler binaries
     poppler_path = r"C:\Program Files\poppler-24.08.0\Library\bin"
     ```
