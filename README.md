@@ -94,11 +94,11 @@ To set up the development environment, follow these steps:
    ```
 
 9. Data preprocessing (這一階段因不同組員處理原因，OS 環境為 Windows):
-   - **Tesseract-OCR**：
+- **Tesseract-OCR**：
   - 下載並安裝 Tesseract-OCR。
   - 安裝完成後，記下安裝路徑（如 `C:\Program Files\Tesseract-OCR\tesseract.exe`）。
 
-   - **Poppler**：
+- **Poppler**：
    - 下載並安裝 Poppler。
    - 安裝完成後，記下 `poppler_path`（如 `C:\Program Files\poppler-24.08.0\Library\bin`）。
 
@@ -119,6 +119,8 @@ poppler_path = r"C:\Program Files\poppler-24.08.0\Library\bin"
 - `競賽資料集/reference/faq/pid_map_content.json`
 - `競賽資料集/reference/finance/*.pdf`
 - `競賽資料集/reference/insurance/*.pdf`
+
+運行 data preprocess scripts:
 
    ```
    python3 Proprocess/data_process/data_preprocess.py
