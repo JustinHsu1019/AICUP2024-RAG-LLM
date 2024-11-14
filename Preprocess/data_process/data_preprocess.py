@@ -1,11 +1,13 @@
+import json
+import os
 import zipfile
+
 import pytesseract
 from pdf2image import convert_from_bytes
-import os
-import json
 
 # Configure Tesseract path if necessary (update this path as needed)
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
 
 def ocr_in_folder(zip_path, folder, output_dir):
     """
@@ -19,7 +21,7 @@ def ocr_in_folder(zip_path, folder, output_dir):
     Returns:
         None
     """
-    folder_path = f"{folder}/"
+    folder_path = f'{folder}/'
 
     with zipfile.ZipFile(zip_path, 'r') as zipf:
         for zip_info in zipf.infolist():
@@ -28,8 +30,8 @@ def ocr_in_folder(zip_path, folder, output_dir):
                     pdf_bytes = pdf_file.read()
 
                     # Specify the path to the Poppler binaries if needed
-                    poppler_path = r"C:\Program Files\poppler-24.08.0\Library\bin"
-                    
+                    poppler_path = r'C:\Program Files\poppler-24.08.0\Library\bin'
+
                     # Convert the PDF bytes to images
                     images = convert_from_bytes(pdf_bytes, dpi=300, poppler_path=poppler_path)
 
@@ -40,21 +42,18 @@ def ocr_in_folder(zip_path, folder, output_dir):
 
                     # Perform OCR on each page and save the text
                     for i, image in enumerate(images):
-                        text = pytesseract.image_to_string(image, lang="chi_tra")
+                        text = pytesseract.image_to_string(image, lang='chi_tra')
                         output_file_path = os.path.join(output_dir, f'{base_filename}_page_{i + 1}.txt')
                         os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
                         with open(output_file_path, 'w', encoding='utf-8') as f:
                             f.write(text)
-                    print(f"OCR completed for {base_filename}")
+                    print(f'OCR completed for {base_filename}')
+
 
 # OCR extraction paths
 zip_path = 'datazip.zip'
-ocr_in_folder(zip_path, "競賽資料集/reference/insurance", 'dataset/output_text/insurance')
-ocr_in_folder(zip_path, "競賽資料集/reference/finance", 'dataset/output_text/finance')
-
-# FAQ and OCR JSON processing
-import json
-import os
+ocr_in_folder(zip_path, '競賽資料集/reference/insurance', 'dataset/output_text/insurance')
+ocr_in_folder(zip_path, '競賽資料集/reference/finance', 'dataset/output_text/finance')
 
 # File paths
 FAQ_FILEPATH = 'datazip/競賽資料集/reference/faq/pid_map_content.json'
@@ -74,18 +73,15 @@ def check_text(file_path, category):
         list: A list of dictionaries containing formatted FAQ data.
     """
     formatted_data = []
-    with open(file_path, "r", encoding="utf-8") as faq_file:
+    with open(file_path, encoding='utf-8') as faq_file:
         loaded_faq = json.load(faq_file)
 
     for qid, questions in loaded_faq.items():
         for question_item in questions:
             formatted_entry = {
-                "category": category,
-                "qid": qid,
-                "content": {
-                    "question": question_item["question"],
-                    "answers": question_item["answers"]
-                }
+                'category': category,
+                'qid': qid,
+                'content': {'question': question_item['question'], 'answers': question_item['answers']},
             }
             formatted_data.append(formatted_entry)
             print(formatted_entry)
@@ -113,7 +109,7 @@ def read_ocr_files(ocr_folder_path, category):
             file_basenames.add(basename)
 
     for basename in sorted(file_basenames, key=lambda x: int(x)):
-        all_text = ""
+        all_text = ''
         page_files = []
 
         for filename in os.listdir(ocr_folder_path):
@@ -124,22 +120,18 @@ def read_ocr_files(ocr_folder_path, category):
 
         for page_file in page_files:
             ocr_file_path = os.path.join(ocr_folder_path, page_file)
-            with open(ocr_file_path, "r", encoding="utf-8") as ocr_file:
+            with open(ocr_file_path, encoding='utf-8') as ocr_file:
                 content = ocr_file.read()
-                all_text += content + "\n\n"
+                all_text += content + '\n\n'
 
-        formatted_entry = {
-            "category": category,
-            "qid": basename,
-            "content": all_text.strip()
-        }
+        formatted_entry = {'category': category, 'qid': basename, 'content': all_text.strip()}
         formatted_data.append(formatted_entry)
         print(formatted_entry)
 
     return formatted_data
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     """
     Main entry point of the script. Processes FAQ, finance, and insurance OCR data,
     consolidates them, and saves the result to a JSON file.
@@ -147,21 +139,21 @@ if __name__ == "__main__":
     total_formatted_data = []
 
     # handle faq
-    faq_data = check_text(FAQ_FILEPATH, "faq")
+    faq_data = check_text(FAQ_FILEPATH, 'faq')
     total_formatted_data.extend(faq_data)
 
     # read finance ocr
-    finance_data = read_ocr_files(FINANCE_OCR_FOLDER_PATH, "finance")
+    finance_data = read_ocr_files(FINANCE_OCR_FOLDER_PATH, 'finance')
     total_formatted_data.extend(finance_data)
 
     # read insurance ocr
-    insurance_data = read_ocr_files(INSURANCE_OCR_FOLDER_PATH, "insurance")
+    insurance_data = read_ocr_files(INSURANCE_OCR_FOLDER_PATH, 'insurance')
     total_formatted_data.extend(insurance_data)
 
     # store the data after cleaning in formatted_reference_ocr.json
-    output_json_path = "data/formatted_reference_ocr.json"
+    output_json_path = 'data/formatted_reference_ocr.json'
     # os.makedirs(os.path.dirname(output_json_path), exist_ok=True)
-    with open(output_json_path, "w", encoding="utf-8") as formatted_file:
+    with open(output_json_path, 'w', encoding='utf-8') as formatted_file:
         json.dump(total_formatted_data, formatted_file, ensure_ascii=False, indent=4)
 
-    print("The process is finished and the result is saved in dataset/formatted_reference_ocr.json")
+    print('The process is finished and the result is saved in dataset/formatted_reference_ocr.json')

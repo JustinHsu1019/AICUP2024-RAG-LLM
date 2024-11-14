@@ -51,7 +51,7 @@ cd your-repo-name
 - **Tesseract-OCR**：
   - 下載並安裝 Tesseract-OCR。
   - 安裝完成後，記下安裝路徑（如 `C:\Program Files\Tesseract-OCR\tesseract.exe`）。
-  
+
 - **Poppler**：
   - 下載並安裝 Poppler。
   - 安裝完成後，記下 `poppler_path`（如 `C:\Program Files\poppler-24.08.0\Library\bin`）。
