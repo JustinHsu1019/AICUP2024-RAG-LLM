@@ -1,6 +1,8 @@
 # 進行檢索的主程式
 
 ## flask_app.py
+- `/` 是 API Docs, `/api/chat/` 是我們的 Retrieval API
+
 會開出一個 API 供 main.py 呼叫，每次呼叫會送入一題問題，並回傳一個答案 pid
 
 ## utils/retrieval_agent.py
