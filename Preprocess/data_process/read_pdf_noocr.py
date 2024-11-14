@@ -5,8 +5,8 @@ import pdfplumber
 from tqdm import tqdm
 
 
-# 讀取單個PDF文件並返回其文本內容
 def read_pdf(pdf_loc):
+    """ 讀取單個PDF文件並返回其文本內容 """
     pdf = pdfplumber.open(pdf_loc)
     pdf_text = ''
     for page in pdf.pages:
@@ -17,8 +17,8 @@ def read_pdf(pdf_loc):
     return pdf_text
 
 
-# 從指定資料夾載入PDF文件，並根據資料夾名稱設定category
 def load_data_by_category(source_path, category):
+    """ 從指定資料夾載入PDF文件，並根據資料夾名稱設定category """
     pdf_files = [f for f in os.listdir(source_path) if f.endswith('.pdf')]
     data = []
     for file in tqdm(pdf_files):
@@ -28,8 +28,8 @@ def load_data_by_category(source_path, category):
     return data
 
 
-# 主程式
 def generate_json(output_path):
+    """ Gen JSON 主程式 """
     all_data = []
 
     # 載入不同類別的PDF資料
