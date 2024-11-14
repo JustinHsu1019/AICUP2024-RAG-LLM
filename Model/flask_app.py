@@ -59,18 +59,18 @@ class HealthCheck(Resource):
         return response
 
 
-# TODO: Modify the output format for general RAG purposes
 @ns.route('/chat')
 class ChatBot(Resource):
     @api.doc('chat_bot')
     @api.expect(model)
     def post(self):
+        """retrieve and rank api entry point"""
         qid = request.json.get('qid')
         source = request.json.get('source')
         question = request.json.get('query')
         category = request.json.get('category')
 
-        # for alpha testing
+        # for alpha testing (finding best hybrid search alpha)
         # alpha = request.json.get('alpha')
 
         # input template
@@ -81,9 +81,10 @@ class ChatBot(Resource):
         # "category": "insurance"
         # },
 
-        alpha = 0.5
+        alpha = 0.5  # 最終因使用 Reranker 全盤處理 sources，故任何 alpha 對準確率都無影響
 
         if not question:
+            # 為避免任何萬一，無論如何都須回傳一個結果，不做 Error logging
             response = jsonify({'qid': '1', 'retrieve': '1'})
             response.status_code = 200
             return response
@@ -103,19 +104,24 @@ class ChatBot(Resource):
             response.status_code = 200
             return response
         except TypeError:
+            # 為避免任何萬一，無論如何都須回傳一個結果，不做 Error logging
             response = jsonify({'qid': qid, 'retrieve': source[-1]})
             response.status_code = 200
             return response
 
 
+# For API Docs
 @app.before_request
 def require_auth_for_docs():
+    """Require authentication for API Docs"""
     if request.path == '/':
         return auth.login_required()(swagger_ui)()
 
 
+# For API Docs
 @app.route('/')
 def swagger_ui():
+    """Redirect to the Swagger UI"""
     return api.render_doc()
 
 

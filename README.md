@@ -1,14 +1,52 @@
 # AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用
-＊＊ High-Accuracy RAG Retriever Template ＊＊
 
-## Rankings
+## Repo Structure
+```
+.
+├── .github
+│   ├── contribute_guide.md
+│   └── workflows
+│       └── ci.yml
+├── .gitignore # 讓 git 忽略的檔案和目錄 (e.g. cache, logs, etc.)
+├── .pre-commit-config.yaml # 設定 pre-commit hooks 以檢查與格式化代碼、環境配置、Git 設定及檢測敏感資訊
+├── .ruff.toml # ruff 設定檔，lint: pep8-naming, pycodestyle, pyflakes, etc.
+├── LICENSE # MIT License
+├── Model
+│   ├── README.md
+│   ├── flask_app.py
+│   └── utils
+│       ├── README.md
+│       ├── __init__.py
+│       ├── config_log.py
+│       └── retrieval_agent.py
+├── Preprocess
+│   ├── README.md
+│   ├── data_process
+│   │   ├── README.md
+│   │   ├── conbine_readpdf_result.py
+│   │   ├── merge_with_ocr_pdfminer.py
+│   │   ├── read_pdf_noocr.py
+│   │   └── read_pdf_ocr.py
+│   └── insert_data.py
+├── README.md
+├── config_example.ini # 設定檔範例，需自己複製一份成 config.ini 並修改
+├── data
+│   └── README.md
+├── docker
+│   ├── README.md
+│   ├── docker-compose.yml
+│   └── docker_install.sh
+├── main.py # 主程式
+├── requirements.txt # Python pip 環境需求
+└── testing
+    ├── README.md
+    ├── checkans.py
+    └── get_best_alpha.py
+```
 
-- Overall Ranking: 38th out of 487 teams (~7.8%)
-   - Leaderboard: 38th out of 222
+## Setup Environment
+- **OS:** 除了 Data processing 使用 Windows, 其他以 MacOS, Linux 為主, Windows 需安裝 WSL2 等來模擬出 Linux 環境
 
-![AI Cup Result](img/aicup_result.png)
-
-## Development Mode
 To set up the development environment, follow these steps:
 
 1. Create a virtual environment:
@@ -17,95 +55,95 @@ To set up the development environment, follow these steps:
    source aicup_venv/bin/activate
    ```
 
-2. Install the required dependencies:
+2. git clone our repo:
+   ```
+   git clone https://github.com/JustinHsu1019/AICUP2024-RAG-LLM.git
+   cd AICUP2024-RAG-LLM
+   ```
+
+3. Install the required dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-3. Copy the configuration example and create your own config file:
+4. Copy the configuration example and create your own config file:
    ```
    cp config_example.ini config.ini
    ```
 
-4. Manually add your `secret key` to the `config.ini`.
+5. Manually add your `secret key` to the `config.ini`:
 
-5. Create a `logs` directory:
+- [OpenAI] 的 api_key 可以在 openai 官網註冊取得
+- [VoyageAI] 的 api_key 可以在 voyageai 官網註冊取得
+- [Api_docs] 的 password 可以自己隨意輸入
+    - flask_app.py 啟動後，直接訪問 http://127.0.0.1:5000/ 即可看到 Swagger API 文件頁面
+
+6. Create a `logs` directory:
    ```
    mkdir logs
    ```
 
-6. Navigate to the `docker` directory (optional):
+7. Navigate to the `docker` directory:
    ```
    cd docker
    ```
 
-7. Start the Docker environment (optional):
+8. Start the Docker environment (weaviate database):
    ```
    docker-compose up -d
    ```
 
-8. Run the Flask app:
+9. Data preprocessing (這一階段因不同組員處理原因，OS 環境為 Windows):
+- **Tesseract-OCR**：
+  - 下載並安裝 Tesseract-OCR。
+  - 安裝完成後，記下安裝路徑（如 `C:\Program Files\Tesseract-OCR\tesseract.exe`）。
+
+- **Poppler**：
+   - 下載並安裝 Poppler。
+   - 安裝完成後，記下 `poppler_path`（如 `C:\Program Files\poppler-24.08.0\Library\bin`）。
+
+在程式碼中配置 Tesseract 和 Poppler 的路徑：
+
+```python
+# Configure Tesseract path if necessary (update this path as needed)
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+# Specify the path to the Poppler binaries
+poppler_path = r"C:\Program Files\poppler-24.08.0\Library\bin"
+```
+
+確保將上述路徑替換為本地實際安裝的路徑。
+
+確保您的 ZIP 文件包含以下資料夾和文件 (下載官方 dataset 後)：
+
+- `競賽資料集/reference/faq/pid_map_content.json`
+- `競賽資料集/reference/finance/*.pdf`
+- `競賽資料集/reference/insurance/*.pdf`
+
+運行 data preprocess scripts:
+
    ```
-   python3 src/flask_app.py
+   python3 Proprocess/data_process/data_preprocess.py
+   python3 Preprocess/data_process/read_pdf_noocr.py
+   python3 Preprocess/data_process/conbine_readpdf_result.py
    ```
 
-## Docker Production Mode
-
-1. Copy the configuration example and create your own config file:
+10. Data insert to weaviate:
    ```
-   cp config_example.ini config.ini
+   python3 Preprocess/insert_data.py
    ```
 
-2. Manually add your `secret key` to the `config.ini`.
-
-3. Create a `logs` directory:
+11. Run the Flask app (/ 是 API Docs, /api/chat/ 是我們的 Retrieval API):
    ```
-   mkdir logs
+   python3 Model/flask_app.py
    ```
 
-4. Navigate to the `docker` directory:
-   ```
-   cd docker
-   ```
+11. 將主辦方提供的題目 json 檔案改名為 questions.json 並塞入 data/
 
-5. Start the Docker environment:
+12. 運行 main.py 進行測試得出 data/pred_retrieve.json 提交最終結果給主辦方:
    ```
-   docker-compose up -d
-   ```
-
-6. Build the Docker image:
-   ```
-   docker build -t aicup_img -f dockerfile .
-   ```
-
-7. Run the Docker container:
-   ```
-   docker run -d -p 5001:5001 --name aicup_cont aicup_img
+   python3 main.py
    ```
 
 ## Folder-specific Details
 For more detailed information about each folder and its purpose, refer to the individual `README.md` files located in their respective directories.
-
-## Contribution Guide
-We follow GitHub Flow for contributing. The steps are as follows:
-
-1. **Claim an issue**: Start by picking an issue from GitHub.
-2. **Create a branch**: Open a new branch with a clear name related to the issue (e.g., `feat/xxxxx-feature`).
-3. **Development**: After completing the feature, ensure you run pre-commit hooks:
-   ```
-   pre-commit run --all-files
-   ```
-4. **Create PR Request (PR)**:
-   - Ensure your PR is small and easily reviewable.
-   - Add the GitHub issue number to the PR title in the format `feat(#123): xxxxxx` for easy reference.
-   - Write a clear description including the reason for the change and what was modified (`Reason & Changes`).
-5. **Review & Approval**:
-   - Assign the PR to all members of the team for review.
-   - Wait for at least one approval.
-   - Ensure all CI checks pass.
-6. **Merge**: Once approved and CI passes, merge the branch into `main` yourself.
-
-## Additional Notes
-- Keep your commits focused and ensure meaningful commit messages.
-- Always rebase your branch on top of `main` before merging.
-- Avoid large, multi-purpose PRs. Smaller changes are easier to review and help prevent issues.

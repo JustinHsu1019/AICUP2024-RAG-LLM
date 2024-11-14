@@ -6,6 +6,7 @@ LOGGING_PATH = 'logs/Logger.log'
 
 
 def setup_config_and_logging():
+    """Set up the configuration and logging."""
     config = configparser.ConfigParser()
 
     logger = logging.getLogger()
