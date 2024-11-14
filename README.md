@@ -89,11 +89,13 @@ To set up the development environment, follow these steps:
    ```
 
 8. Start the Docker environment (weaviate database):
+- 首先將 docker-compose.yml 的 `OPENAI_APIKEY: ${OPENAI_APIKEY}` 改成你的 API Key
+- 接著啟動 Docker Compose
    ```
    docker-compose up -d
    ```
 
-9. Data preprocessing (這一階段因不同組員處理原因，OS 環境為 Windows):
+10. Data preprocessing (這一階段因不同組員處理原因，OS 環境為 Windows):
 - **Tesseract-OCR**：
   - 下載並安裝 Tesseract-OCR。
   - 安裝完成後，記下安裝路徑（如 `C:\Program Files\Tesseract-OCR\tesseract.exe`）。
