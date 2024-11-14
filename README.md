@@ -133,7 +133,7 @@ To set up the development environment, follow these steps:
    python3 Preprocess/insert_data.py
    ```
 
-11. Run the Flask app (/ 是 API Docs, /api/chat/ 是我們的 Retrieval API):
+11. Run the Flask app (`/` 是 API Docs, `/api/chat/` 是我們的 Retrieval API):
    ```
    python3 Model/flask_app.py
    ```
