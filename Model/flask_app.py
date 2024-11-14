@@ -18,7 +18,7 @@ users = {'aicup': generate_password_hash(config.get('Api_docs', 'password'))}
 
 @auth.verify_password
 def verify_password(username, password):
-    """ Verify password for API Docs"""
+    """Verify password for API Docs"""
     if username in users and check_password_hash(users.get(username), password):
         return username
     return None
@@ -53,6 +53,7 @@ model = api.model(
 @ns.route('/')
 class HealthCheck(Resource):
     """Server health check."""
+
     @api.doc('health_check')
     def get(self):
         """Server health check."""
@@ -64,6 +65,7 @@ class HealthCheck(Resource):
 @ns.route('/chat')
 class ChatBot(Resource):
     """retrieve and rank api entry point"""
+
     @api.doc('chat_bot')
     @api.expect(model)
     def post(self):
