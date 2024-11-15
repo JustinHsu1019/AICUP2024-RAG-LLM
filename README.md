@@ -110,7 +110,7 @@ To set up the development environment, follow these steps:
    docker-compose up -d
    ```
 
-10. Data preprocessing (這一階段因不同組員處理原因，OS 環境為 Windows):
+9. Data preprocessing (這一階段因不同組員處理原因，OS 環境為 Windows):
 - **Tesseract-OCR**：
   - 下載並安裝 Tesseract-OCR。
   - 安裝完成後，記下安裝路徑（如 `C:\Program Files\Tesseract-OCR\tesseract.exe`）。
@@ -155,9 +155,9 @@ To set up the development environment, follow these steps:
    python3 Model/flask_app.py
    ```
 
-11. 將主辦方提供的題目 json 檔案改名為 questions.json 並塞入 data/
+12. 將主辦方提供的題目 json 檔案改名為 questions.json 並塞入 data/
 
-12. 運行 main.py 進行測試得出 data/pred_retrieve.json 提交最終結果給主辦方:
+13. 運行 main.py 進行測試得出 data/pred_retrieve.json 提交最終結果給主辦方:
    ```
    python3 main.py
    ```
