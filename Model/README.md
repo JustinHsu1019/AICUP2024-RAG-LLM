@@ -1,6 +1,6 @@
 # 執行檢索的主程式
 
-# 使用技術
+## 使用技術
 - Hybrid Search (Stage 1 --> Get Top 100)
     - OpenAI Embedding Model (Semantic search): `text-embedding-3-large` (50% Search)
     - Bm25 (Keyword search): `weaviate gse (jieba)` (50% Search)
