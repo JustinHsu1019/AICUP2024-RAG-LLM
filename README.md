@@ -1,5 +1,20 @@
 # AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用
 
+## 使用技術
+
+### Retriever
+
+- Hybrid Search (Stage 1 --> Get Top 100)
+    - OpenAI Embedding Model (Semantic search): `text-embedding-3-large` (50% Search)
+    - Bm25 (Keyword search): `weaviate gse (jieba)` (50% Search)
+- Voyage Reranker (Stage 2 --> Get Top 1)
+
+### Data Preprocess
+
+- 使用 Tesseract OCR & PDF Plumber/Miner 將 PDF 轉換為文字
+- 利用 text_splitter 來 chunk tokens 數過多的資料
+   - 2000 tokens 一切、500 tokens 重疊
+
 ## Repo Structure
 ```
 .

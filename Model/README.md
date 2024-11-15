@@ -1,4 +1,10 @@
-# 進行檢索的主程式
+# 執行檢索的主程式
+
+# 使用技術
+- Hybrid Search (Stage 1 --> Get Top 100)
+    - OpenAI Embedding Model (Semantic search): `text-embedding-3-large` (50% Search)
+    - Bm25 (Keyword search): `weaviate gse (jieba)` (50% Search)
+- Voyage Reranker (Stage 2 --> Get Top 1)
 
 ## flask_app.py
 - `/` 是 API Docs, `/api/chat/` 是我們的 Retrieval API
