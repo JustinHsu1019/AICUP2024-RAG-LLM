@@ -1,15 +1,19 @@
-# AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用
+# High-Accuracy RAG Retriever Template
 
-＊＊ High-Accuracy RAG Retriever Template ＊＊
+AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用
+
+## General Template (This Repo is AICUP version, here is the general version)
+- [JustinHsu1019/general-rag-template](https://github.com/JustinHsu1019/general-rag-template)
+- 或是見本 Repo 內的 [./general-rag-template](./general-rag-template)
 
 ## 使用技術
 
 ### Retriever
 
-- Hybrid Search (Stage 1 --> Get Top 100)
-    - OpenAI Embedding Model (Semantic search): `text-embedding-3-large` (50% Search)
-    - Bm25 (Keyword search): `weaviate gse (jieba)` (50% Search)
-- Voyage Reranker (Stage 2 --> Get Top 1)
+- Hybrid Search (Stage 1 -> Get Top 100)
+    - OpenAI Embedding Model (Semantic search): `text-embedding-3-large` (80% Search)
+    - Bm25 (Keyword search): `weaviate gse (jieba)` (20% Search)
+- Voyage Reranker (Stage 2 -> Get Top 1)
 
 ### Data Preprocess
 
@@ -113,39 +117,39 @@ To set up the development environment, follow these steps:
    ```
 
 9. Data preprocessing (這一階段因不同組員處理原因，OS 環境為 Windows):
-- **Tesseract-OCR**：
-  - 下載並安裝 Tesseract-OCR。
-  - 安裝完成後，記下安裝路徑（如 `C:\Program Files\Tesseract-OCR\tesseract.exe`）。
+   - **Tesseract-OCR**：
+   - 下載並安裝 Tesseract-OCR。
+   - 安裝完成後，記下安裝路徑（如 `C:\Program Files\Tesseract-OCR\tesseract.exe`）。
 
-- **Poppler**：
-   - 下載並安裝 Poppler。
-   - 安裝完成後，記下 `poppler_path`（如 `C:\Program Files\poppler-24.08.0\Library\bin`）。
+   - **Poppler**：
+      - 下載並安裝 Poppler。
+      - 安裝完成後，記下 `poppler_path`（如 `C:\Program Files\poppler-24.08.0\Library\bin`）。
 
-在程式碼中配置 Tesseract 和 Poppler 的路徑：
+   - 在程式碼中配置 Tesseract 和 Poppler 的路徑：
 
-```python
-# Configure Tesseract path if necessary (update this path as needed)
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+      ```python
+      # Configure Tesseract path if necessary (update this path as needed)
+      pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-# Specify the path to the Poppler binaries
-poppler_path = r"C:\Program Files\poppler-24.08.0\Library\bin"
-```
+      # Specify the path to the Poppler binaries
+      poppler_path = r"C:\Program Files\poppler-24.08.0\Library\bin"
+      ```
 
-確保將上述路徑替換為本地實際安裝的路徑。
+   - 確保將上述路徑替換為本地實際安裝的路徑。
 
-確保您的 ZIP 文件包含以下資料夾和文件 (下載官方 dataset 後)：
+   - 確保您的 ZIP 文件包含以下資料夾和文件 (下載官方 dataset 後)：
 
-    • `競賽資料集/reference/faq/pid_map_content.json`
-    • `競賽資料集/reference/finance/*.pdf`
-    • `競賽資料集/reference/insurance/*.pdf`
+      - `競賽資料集/reference/faq/pid_map_content.json`
+      - `競賽資料集/reference/finance/*.pdf`
+      - `競賽資料集/reference/insurance/*.pdf`
 
-運行 data preprocess scripts:
+   - 運行 data preprocess scripts:
 
-   ```
-   python3 Proprocess/data_process/data_preprocess.py
-   python3 Preprocess/data_process/read_pdf_noocr.py
-   python3 Preprocess/data_process/conbine_readpdf_result.py
-   ```
+      ```
+      python3 Proprocess/data_process/data_preprocess.py
+      python3 Preprocess/data_process/read_pdf_noocr.py
+      python3 Preprocess/data_process/conbine_readpdf_result.py
+      ```
 
 10. Data insert to weaviate:
    ```

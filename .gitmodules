@@ -1,0 +1,3 @@
+[submodule "general-rag-template"]
+	path = general-rag-template
+	url = https://github.com/JustinHsu1019/general-rag-template

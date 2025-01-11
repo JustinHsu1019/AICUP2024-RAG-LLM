@@ -86,7 +86,7 @@ class ChatBot(Resource):
         # "category": "insurance"
         # },
 
-        alpha = 0.5  # 最終因使用 Reranker 全盤處理 sources，故任何 alpha 對準確率都無影響
+        alpha = 0.8  # 最終因使用 Reranker 全盤處理 sources，故任何 alpha 對準確率都無影響
 
         if not question:
             # 為避免任何萬一，無論如何都須回傳一個結果，不做 Error logging
