@@ -2,7 +2,7 @@
 
 AI CUP 2024 玉山人工智慧公開挑戰賽－RAG與LLM在金融問答的應用
 
-## General Template (This Repo is AICUP version, here is the general version)
+#### General Template (This Repo is AICUP version, here is the general version)
 - [JustinHsu1019/general-rag-template](https://github.com/JustinHsu1019/general-rag-template)
 - 也可點擊本 Repo 內的 ./general-rag-template
 
